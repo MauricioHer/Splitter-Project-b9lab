@@ -12,15 +12,16 @@ contract Splitter{
         require(owner==msg.sender);   //Solo el dueño puede modificar
         _;
     }
-//cuando se crea el contrato, declara quien es el dueño   
+  
     function Splitter() public payable{
-        owner=msg.sender;
+        owner=msg.sender;		//cuando se crea el contrato, declara quien es el dueño 
     }
-//función fallback
-       function() public payable{
+
+       function() public payable{	//función fallback
 	}
 	
 //guardar las direcciones de Alice, Bob y Carol (Solo el dueño la puede modificar).
+
     function setReceivers(address _Bob, address _Carol) onlyOwner public{
 	require(msg.sender!=_Bob && msg.sender!=_Carol && _Bob!=_Carol);
         addressKeeper.push(msg.sender);
@@ -31,15 +32,14 @@ contract Splitter{
         Logcreator(msg.sender,_Bob,_Carol);
 	}  
 
-//retirar el dinero pendiente.
-    function withDrawOne() payable public{
-        require(msg.sender==addressKeeper[1]);
-        require(bobPending==true);
-            if(carolPending==true){
+    function withDrawOne() payable public{		//Permite retirar el dinero pendiente.
+        require(msg.sender==addressKeeper[1]);		//solo el indicado puede
+        require(bobPending==true);			//debe tener pendiente
+            if(carolPending==true){			//si Carol no ha retirado, puede quitar la mitad del balance
             addressKeeper[1].transfer(address(this).balance/2);
             }
             else {
-            addressKeeper[1].transfer(address(this).balance); 
+            addressKeeper[1].transfer(address(this).balance); //si Carol ya retiró, puede quitar todo el balance
             }
         bobPending=false;
     }
@@ -56,11 +56,11 @@ function withDrawTwo() payable public{
             carolPending=false;
     }
     
-    function contractBalance() public view returns(uint){
+    function contractBalance() public view returns(uint){	//devuelve el balance del contrato
         return( address(this).balance);
     }
     
-    function participantBalance() public view returns( uint, uint, uint){
+    function participantBalance() public view returns( uint, uint, uint){	//entrega el balance de los participantes
         return(addressKeeper[0].balance,addressKeeper[1].balance,addressKeeper[2].balance);
     }
     
