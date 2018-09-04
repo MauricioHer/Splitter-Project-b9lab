@@ -55,8 +55,16 @@ contract('Splitter',accounts =>{console.log(accounts);
 	assert.equal( await spli.carolPending(),false);
 	assert.equal(web3.eth.getBalance(spli.address).toNumber(),0);	
 	});
-		
+				
 	it("no one else but the authorized can withDraw", async function(){
+		await spli.setReceivers(bob,carol)
+		try{
+		await spli.withDrawOne({from:accounts[0]})}
+		catch(error){
+		return true;}
+		throw new Error("I should never see this")});
+		
+	/*it("no one else but the authorized can withDraw", async function(){
 	await spli.setReceivers(bob,carol)	
 	try{
 	await spli.withDrawOne({from:accounts[0]})
@@ -67,7 +75,7 @@ contract('Splitter',accounts =>{console.log(accounts);
 	assert.equal(web3.eth.getBalance(spli.address).toNumber(),1000000000000000);
 	});	
 
-	
+	*/
 
 
 
